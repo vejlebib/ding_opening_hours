@@ -1,0 +1,8 @@
+name = Ding opening hours
+description = Extends opening hours functionality for Ding!
+package = Ding!
+core = 7.x
+version = "7.x-0.1"
+files[] = ding_opening_hours.module
+dependencies[] = opening_hours
+dependencies[] = tipsy
