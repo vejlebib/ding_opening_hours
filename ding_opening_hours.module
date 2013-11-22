@@ -1,4 +1,11 @@
 <?php
+/**
+ * @file
+ * Code for the Ding opening hours feature.
+ */
+
+include_once 'ding_opening_hours.features.inc';
+
 
 /**
  * Implements hook_block_info().
