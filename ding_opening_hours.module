@@ -91,11 +91,11 @@ function theme_opening_hours_libraries_today($variables) {
   drupal_add_css($module_path . '/css/oho-today.css');
   drupal_add_js($module_path . '/js/oho-today.js');
   
-  $output = '<ul>';
+  $output = '<ul class="opening-hours-list">';
   
   foreach ($data as $library => $instances) {
      $output .= '<li><div class="title">' . l($library, 'node/' . $instances[0]->nid) . '</div>'
-       .'<div class="opening-hours-scope">';
+       .'<div class="details">';
      if (count($instances) > 1) {
        $output .= '<div class="tipsy-oho" title="' . t('click for detailed information on these hours') . '"><span class="open">' . $instances[0]->start_time . '</span> - <span class="close">' . $instances[0]->end_time . '</span>';
        $output .= '<div class="content-oho"><div class="close-oho"><h3>' . t('Særligt omkring åbningstiden på ') . $library . ':</h3>';

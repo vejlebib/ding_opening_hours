@@ -4,3 +4,18 @@
 .content-oho {  
   display: none;
   }
+
+.tipsy-oho .close:after {
+  color: #5DA725;
+  content: " *";
+}
+
+.opening-hours-list .title {
+  float: left;
+  width: 45%;
+}
+
+.opening-hours-list .details {
+  float: right;
+  width: 45%;
+}
