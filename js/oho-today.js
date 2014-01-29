@@ -14,7 +14,7 @@
             return $(this).find('.content-oho').html();
           },
           html: true,
-          trigger: 'manual',
+          trigger: 'manual'
         });
 
         // Attach "toggle-style" click event
