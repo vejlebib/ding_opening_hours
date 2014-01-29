@@ -11,22 +11,22 @@ include_once 'ding_opening_hours.features.inc';
  * Implements hook_block_info().
  */
 function ding_opening_hours_block_info() {
-  
+
   $blocks['oho-lib-today'] = array(
     // info: The name of the block.
     'info' => t('Opening hours for libraries today'),
     // Block caching (DRUPAL_CACHE_GLOBAL = block is the same for every user on every page)
     'cache' => DRUPAL_CACHE_GLOBAL,
-  ); 
+  );
 
   return $blocks;
-  
-  switch ($op) { 
+
+  switch ($op) {
     case 'list':
-      $blocks['oho-lib-today']['info'] = t('Opening hours for libraries today');         
-      $blocks['oho-lib-today']['cache'] = BLOCK_NO_CACHE;     
+      $blocks['oho-lib-today']['info'] = t('Opening hours for libraries today');
+      $blocks['oho-lib-today']['cache'] = BLOCK_NO_CACHE;
       return $blocks;
-     
+
     case 'view':
       switch ($delta) {
         case 'oho-lib-today':
@@ -34,7 +34,7 @@ function ding_opening_hours_block_info() {
           break;
       }
       return $block;
-  }      
+  }
 }
 
 
@@ -44,7 +44,7 @@ function ding_opening_hours_block_info() {
 function ding_opening_hours_block_view($delta = '') {
   // The $delta parameter tells us which block is being requested.
   switch ($delta) {
-  
+
     case 'oho-lib-today':
       $block['subject'] = t('Open hours today');
       $block['content'] = ding_opening_hours_contents($delta);
@@ -62,10 +62,10 @@ function ding_opening_hours_contents($which_block) {
 
     case 'oho-lib-today':
       $data = _oho_today_data();
-      
+
       return array('#markup' => theme('opening_hours_libraries_today', array('data' => $data)));
   }
-} 
+}
 
 /**
  * Implements hook_theme().
@@ -80,19 +80,19 @@ function ding_opening_hours_theme() {
 
 /**
  * Theme function to render opening hours for the libraries of the ding site
- * 
+ *
  * @param unknown_type $variables
  */
 function theme_opening_hours_libraries_today($variables) {
   // Data is an array of objects
   $data = $variables['data'];
-  
+
   $module_path = drupal_get_path('module', 'ding_opening_hours');
   drupal_add_css($module_path . '/css/oho-today.css');
   drupal_add_js($module_path . '/js/oho-today.js');
-  
+
   $output = '<ul class="opening-hours-list">';
-  
+
   foreach ($data as $library => $instances) {
      $output .= '<li><div class="title">' . l($library, 'node/' . $instances[0]->nid) . '</div>'
        .'<div class="details">';
@@ -104,37 +104,39 @@ function theme_opening_hours_libraries_today($variables) {
            $output .= '<p>' . $inst->notice .': <span class="hours"><span class="open">' . $inst->start_time . '</span> - <span class="close">' . $inst->end_time . '</span></span></p>';
          }
        }
-       $output .= '</div></div></div>'; 
+       $output .= '</div></div></div>';
      }
      else {
        if (!empty($instances[0]->start_time)) {
          $output .= '<span class="hours"><span class="open">' . $instances[0]->start_time . '</span> - <span class="close">' . $instances[0]->end_time . '</span></span>';
-       } 
+       }
        else {
          $output .= '<span class="hours">' . t('Closed') . '</span>';
        }
      }
-     $output .= '</div></li>'; 
+     $output .= '</div></li>';
   }
-  
+
+  $output .= '</ul>';
+
   return $output;
 }
 
 function _oho_today_data() {
   $result_array = array();
-  
+
   $result = db_query("
       SELECT n.nid, n.title, o.start_time, o.end_time, o.notice
-      FROM {node} n LEFT JOIN 
+      FROM {node} n LEFT JOIN
       (
-      SELECT nid, SUBSTRING(start_time, 1, 5) AS start_time, SUBSTRING(end_time, 1, 5) AS end_time, notice 
-      FROM {opening_hours} 
+      SELECT nid, SUBSTRING(start_time, 1, 5) AS start_time, SUBSTRING(end_time, 1, 5) AS end_time, notice
+      FROM {opening_hours}
       WHERE date = DATE(NOW())
       ) o
       ON n.nid = o.nid
       WHERE n.type = 'ding_library'
       ORDER BY n.title, n.nid, o.notice;");
-  
+
   foreach ($result as $row) {
     $result_array[$row->title][] = $row;
   }
